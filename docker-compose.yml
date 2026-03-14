@@ -1,0 +1,31 @@
+services:
+  changedetection:
+    image: ghcr.io/dgtlmoon/changedetection.io
+    container_name: changedetection
+    restart: unless-stopped
+    environment:
+      - PLAYWRIGHT_DRIVER_URL=ws://playwright-chrome:3000
+    volumes:
+      - ./changedetection-data:/datastore
+    ports:
+      - 5000:5000
+    depends_on:
+      - playwright-chrome
+
+  playwright-chrome:
+    image: dgtlmoon/sockpuppetbrowser:latest
+    container_name: playwright-chrome
+    restart: unless-stopped
+    # Essential for Chrome to run on RPI/Linux
+    cap_add:
+      - SYS_ADMIN
+    environment:
+      - SCREEN_WIDTH=1920
+      - SCREEN_HEIGHT=1024
+      - MAX_CONCURRENT_CHROME_PROCESSES=5 # Keep this low for RPI
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token eyJhIjoiNDQ1NDhjYmRiZWExYWM0NDRkZmViMDAwNmZhZjAzN2IiLCJ0IjoiYmI5Yzk1YzktMGMxZC00Yzg5LWJjMWYtNGU3NmFiNWI3Y2E0IiwicyI6Ik9EUXhNREl5TkRjdE1HRTBZeTAwTXpjMUxXRTJaR0l0TVROaFlqZGpPVGd5WmpreSJ9

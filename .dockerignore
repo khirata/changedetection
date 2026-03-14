@@ -1,0 +1,21 @@
+# Exclude Git metadata
+.git
+.gitignore
+
+# Ignore docs / configs not needed for the image
+README.md
+*.md
+
+# Ignore local data and caches
+changedetection-data
+datastore
+
+# Ignore editor files
+.vscode
+.idea
+
+# Ignore logs
+*.log
+
+# Ignore other artifacts
+node_modules
